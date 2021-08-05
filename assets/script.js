@@ -4,13 +4,10 @@ $("#currentDay").text(todayDate);
 
 var businessHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 
-//For each of the i in businessHours, createLine with time using array value
-
-console.log(moment(businessHours[4], "HH").format("HH A"));
-
+//Loops through businessHours array and creates time, form, and button for each item.
 $.each(businessHours, function (i, time) {
   var schedule = $(".container");
-  var line = $("<div></div>").addClass("input-group mb-3");
+  var line = $("<form></form>").addClass("input-group mb-3");
   var time = $("<label></label>")
     .addClass("col-sm-2 col-form-label col-form-label-lg")
     .attr("for", "colFormLabelLg")
@@ -22,7 +19,8 @@ $.each(businessHours, function (i, time) {
   var saveBtn = $("<button></button>")
     .addClass("btn btn-outline-secondary")
     .attr("id", "button-addon2")
-    .attr("type", "button");
+    .attr("type", "button")
+    .attr("data-key", i);
   var saveIcon = $("<i class='bi bi-save'></i>");
 
   schedule.append(line);
@@ -31,3 +29,13 @@ $.each(businessHours, function (i, time) {
   line.append(saveBtn);
   saveBtn.append(saveIcon);
 });
+
+//When click save, store item to local storage.
+$("button").click(function () {
+  var enteredEvent = $("input").val();
+  var test = $(this).attr("data-key");
+  console.log(enteredEvent);
+  console.log(test);
+});
+
+//Populate hours with save items
