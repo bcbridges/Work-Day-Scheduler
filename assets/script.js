@@ -1,5 +1,5 @@
+//Finds current day and sets at top of screen
 var todayDate = moment().format("dddd, MMMM Do");
-
 $("#currentDay").text(todayDate);
 
 var businessHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
@@ -7,13 +7,13 @@ var businessHours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17];
 //Loops through businessHours array and creates time, form, and button for each item.
 $.each(businessHours, function (i, time) {
   var schedule = $(".container");
-  var line = $("<form></form>").addClass("input-group mb-3 row");
+  var line = $("<form></form>").addClass("input-group row");
   var time = $("<label></label>")
     .addClass("col-sm-2 col-form-label col-form-label-lg hour")
     .attr("for", "colFormLabelLg")
     .text(moment(time, "H").format("h A"));
   var events = $("<input/>")
-    .addClass("form-control form-control-lg hour")
+    .addClass("form-control form-control-lg h-100 hour")
     .attr("id", "colFormLabelLg")
     .attr("data-key", i + 8)
     .attr("aria-describedby", "button-addon2");
@@ -53,8 +53,6 @@ $.each(storedEvents.time, function (i) {
     .attr("placeholder", storedEvents.item[i]);
 });
 
-console.log(storedEvents.time[0]);
-
 //When click save, store item to local storage.
 $("button").click(function () {
   var eventTime = $(this).attr("data-key");
@@ -65,9 +63,29 @@ $("button").click(function () {
   storedEvents.time.push(eventTime);
   storedEvents.item.push(enteredEvent);
 
-  console.log(storedEvents);
-
   localStorage.setItem("storedEvents", JSON.stringify(storedEvents));
 });
 
-//Populate hours with save items
+// Sets the current hour and converts string to number
+var currentHour = moment().format("H");
+currentHour = Number(currentHour);
+
+// iterates through all times and sets background
+$("input").each(function (i, element) {
+  var eventHour = this.dataset.key;
+
+  if (eventHour < currentHour) {
+    $(this).addClass("past");
+  } else if (eventHour == currentHour) {
+    $(this).addClass("present");
+  } else {
+    $(this).addClass("future");
+  }
+});
+
+$("input").keydown(function (event) {
+  if (event.keyCode == 13) {
+    event.preventDefault();
+    return false;
+  }
+});
